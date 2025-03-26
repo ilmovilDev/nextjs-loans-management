@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+  postgres:
+    image: postgres:latest
+    restart: always
+
+    ports:
+      - "5432:5432"
+
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD} # Variable de entorno para la contraseña de la base de datos
+      POSTGRES_DB: ${DB_NAME} # Variable de entorno para el nombre de la base de datos
+      POSTGRES_USER: ${DB_USER} # Variable de entorno para el usuario de la base de datos
+
+    container_name: LoansDB
+
+    volumes:
+      - ./postgres:/var/lib/postgresql/data # Monta un volumen para la persistencia de datos
+
