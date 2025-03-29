@@ -14,19 +14,71 @@ datasource db {
 }
 
 model Customer {
-  id        String @id @default(uuid())
+  id        String     @id @default(uuid())
+  firstname String
+  lastname  String
+  email     String     @unique
+  cpf       String     @unique
+  phone     String     @unique
+  address   String
+  status    UserStatus @default(ACTIVE)
+  userId    String
+
+  loans Loan[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Agent {
-  id        String @id @default(uuid())
+  id        String     @id @default(uuid())
+  firstname String
+  lastname  String
+  email     String     @unique
+  cpf       String     @unique
+  phone     String     @unique
+  address   String
+  status    UserStatus @default(ACTIVE)
+  userId    String
+
+  loans Loan[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Loan {
-  id        String @id @default(uuid())
+  id String @id @default(uuid())
+
+  amount       Decimal     @db.Decimal(10, 2)
+  interestRate Decimal     @db.Decimal(5, 2)
+  paymentMode  PaymentMode
+  installments Int
+  status       LoansStatus @default(ACTIVE)
+
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  agentId    String
+  agent      Agent    @relation(fields: [agentId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum LoansStatus {
   ACTIVE
   PAID
   OVERDUE
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum PaymentMode {
+  DAILY
+  WEEKLY
+  BIWEEKLY
+  MONTHLY
 }
